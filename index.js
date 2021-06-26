@@ -5,6 +5,17 @@ const directions = ["Up", "Down", "Left", "Right"];
 
 let shapes = [];
 
+let drawShapes = (shapes) => {
+  shapes.map((shape) =>
+    ctx.fillRect(
+      shape.startPosX,
+      shape.startPosY,
+      Math.abs(shape.startPosX - canvas.width),
+      Math.abs(shape.startPosY - canvas.height)
+    )
+  );
+};
+
 class Pen {
   constructor() {
     this.direction = directions[Math.floor(Math.random() * directions.length)];
@@ -37,8 +48,6 @@ class Pen {
       this.secondCornerY = this.startPosY;
       this.lastCornerX = this.startPosX;
       this.lastCornerY = this.startPosY;
-      this.currentPosX = this.startPosX;
-      this.currentPosY = this.startPosY;
     } else if (this.direction === "Down") {
       this.startPosX = Math.floor(Math.random() * (790 - 10) + 1);
       this.startPosY = 0;
@@ -48,8 +57,6 @@ class Pen {
       this.secondCornerY = this.startPosY;
       this.lastCornerX = this.startPosX;
       this.lastCornerY = this.startPosY;
-      this.currentPosX = this.startPosX;
-      this.currentPosY = this.startPosY;
     }
     if (this.direction === "Right") {
       this.startPosX = 0;
@@ -60,8 +67,6 @@ class Pen {
       this.secondCornerY = this.startPosY;
       this.lastCornerX = this.startPosX;
       this.lastCornerY = this.startPosY;
-      this.currentPosX = this.startPosX;
-      this.currentPosY = this.startPosY;
     }
     if (this.direction === "Left") {
       this.startPosX = 800;
@@ -72,8 +77,6 @@ class Pen {
       this.secondCornerY = this.startPosY;
       this.lastCornerX = this.startPosX;
       this.lastCornerY = this.startPosY;
-      this.currentPosX = this.startPosX;
-      this.currentPosY = this.startPosY;
     }
   }
 
@@ -167,15 +170,7 @@ class Pen {
         lastCornerY: this.lastCornerY,
       });
     }
-    console.log(
-      shapes,
-      "turnCounter:",
-      pen.turnCounter,
-      "currentPositionX:",
-      this.currentPosX,
-      "currentPositionY:",
-      this.currentPosY
-    );
+    console.log(shapes, "turnCounter:", pen.turnCounter);
   }
 
   updatePosition() {
@@ -183,22 +178,19 @@ class Pen {
       switch (this.direction) {
         case "Down":
           this.firstCornerY += 2;
-          this.currentPosY += 2;
 
           break;
         case "Right":
           this.firstCornerX += 2;
-          this.currentPosX += 2;
 
           break;
         case "Up":
           this.firstCornerY -= 2;
-          this.currentPosY -= 2;
 
           break;
         case "Left":
           this.firstCornerX -= 2;
-          this.currentPosX -= 2;
+
           break;
       }
       this.secondCornerX = this.firstCornerX;
@@ -209,22 +201,19 @@ class Pen {
       switch (this.direction) {
         case "Down":
           this.secondCornerY += 2;
-          this.currentPosY += 2;
 
           break;
         case "Right":
           this.secondCornerX += 2;
-          this.currentPosX += 2;
 
           break;
         case "Up":
           this.secondCornerY -= 2;
-          this.currentPosY -= 2;
 
           break;
         case "Left":
           this.secondCornerX -= 2;
-          this.currentPosX -= 2;
+
           break;
       }
       this.lastCornerX = this.secondCornerX;
@@ -233,22 +222,19 @@ class Pen {
       switch (this.direction) {
         case "Down":
           this.lastCornerY += 2;
-          this.currentPosY += 2;
 
           break;
         case "Right":
           this.lastCornerX += 2;
-          this.currentPosX += 2;
 
           break;
         case "Up":
           this.lastCornerY -= 2;
-          this.currentPosY -= 2;
 
           break;
         case "Left":
           this.lastCornerX -= 2;
-          this.currentPosX -= 2;
+
           break;
       }
     }
@@ -273,6 +259,7 @@ window.addEventListener("keydown", (event) => {
 
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawShapes(shapes);
   pen.updatePosition();
   pen.draw();
   if (pen.turnCounter === null) {
