@@ -139,16 +139,34 @@ class Pen {
     this.turnCounter++;
   }
   _saveShape() {
-    shapes.push({
-      startPosX: this.startPosX,
-      startPosY: this.startPosY,
-      firstCornerX: this.firstCornerX,
-      firstCornerY: this.firstCornerY,
-      secondCornerX: this.secondCornerX,
-      secondCornerY: this.secondCornerY,
-      lastCornerX: this.lastCornerX,
-      lastCornerY: this.lastCornerY,
-    });
+    if (this.turnCounter === null) {
+      shapes.push({
+        startPosX: this.startPosX,
+        startPosY: this.startPosY,
+        lastCornerX: this.lastCornerX,
+        lastCornerY: this.lastCornerY,
+      });
+    } else if (this.turnCounter === 1) {
+      shapes.push({
+        startPosX: this.startPosX,
+        startPosY: this.startPosY,
+        firstCornerX: this.firstCornerX,
+        firstCornerY: this.firstCornerY,
+        lastCornerX: this.lastCornerX,
+        lastCornerY: this.lastCornerY,
+      });
+    } else if (this.turnCounter === 2) {
+      shapes.push({
+        startPosX: this.startPosX,
+        startPosY: this.startPosY,
+        firstCornerX: this.firstCornerX,
+        firstCornerY: this.firstCornerY,
+        secondCornerX: this.secondCornerX,
+        secondCornerY: this.secondCornerY,
+        lastCornerX: this.lastCornerX,
+        lastCornerY: this.lastCornerY,
+      });
+    }
     console.log(
       shapes,
       "turnCounter:",
