@@ -18,8 +18,11 @@ class Pen {
     this.secondCornerX = null;
     this.secondCornerY = null;
 
-    this.endPosX = null;
-    this.endPosY = null;
+    this.lastCornerX = null;
+    this.lastCornerY = null;
+
+    this.currentPosX = null;
+    this.currentPosY = null;
 
     this.turnCounter = null;
   }
@@ -32,8 +35,10 @@ class Pen {
       this.firstCornerY = this.startPosY;
       this.secondCornerX = this.startPosX;
       this.secondCornerY = this.startPosY;
-      this.endPosX = this.startPosX;
-      this.endPosY = this.startPosY;
+      this.lastCornerX = this.startPosX;
+      this.lastCornerY = this.startPosY;
+      this.currentPosX = this.startPosX;
+      this.currentPosY = this.startPosY;
     } else if (this.direction === "Down") {
       this.startPosX = Math.floor(Math.random() * (790 - 10) + 1);
       this.startPosY = 0;
@@ -41,8 +46,10 @@ class Pen {
       this.firstCornerY = this.startPosY;
       this.secondCornerX = this.startPosX;
       this.secondCornerY = this.startPosY;
-      this.endPosX = this.startPosX;
-      this.endPosY = this.startPosY;
+      this.lastCornerX = this.startPosX;
+      this.lastCornerY = this.startPosY;
+      this.currentPosX = this.startPosX;
+      this.currentPosY = this.startPosY;
     }
     if (this.direction === "Right") {
       this.startPosX = 0;
@@ -51,8 +58,10 @@ class Pen {
       this.firstCornerY = this.startPosY;
       this.secondCornerX = this.startPosX;
       this.secondCornerY = this.startPosY;
-      this.endPosX = this.startPosX;
-      this.endPosY = this.startPosY;
+      this.lastCornerX = this.startPosX;
+      this.lastCornerY = this.startPosY;
+      this.currentPosX = this.startPosX;
+      this.currentPosY = this.startPosY;
     }
     if (this.direction === "Left") {
       this.startPosX = 800;
@@ -61,8 +70,10 @@ class Pen {
       this.firstCornerY = this.startPosY;
       this.secondCornerX = this.startPosX;
       this.secondCornerY = this.startPosY;
-      this.endPosX = this.startPosX;
-      this.endPosY = this.startPosY;
+      this.lastCornerX = this.startPosX;
+      this.lastCornerY = this.startPosY;
+      this.currentPosX = this.startPosX;
+      this.currentPosY = this.startPosY;
     }
   }
 
@@ -79,7 +90,7 @@ class Pen {
 
     ctx.moveTo(this.secondCornerX, this.secondCornerY);
 
-    ctx.lineTo(this.endPosX, this.endPosY);
+    ctx.lineTo(this.lastCornerX, this.lastCornerY);
     ctx.stroke();
   }
 
@@ -127,66 +138,99 @@ class Pen {
   _turnCount() {
     this.turnCounter++;
   }
+  _saveShape() {
+    shapes.push({
+      startPosX: this.startPosX,
+      startPosY: this.startPosY,
+      firstCornerX: this.firstCornerX,
+      firstCornerY: this.firstCornerY,
+      secondCornerX: this.secondCornerX,
+      secondCornerY: this.secondCornerY,
+      lastCornerX: this.lastCornerX,
+      lastCornerY: this.lastCornerY,
+    });
+    console.log(
+      shapes,
+      "turnCounter:",
+      pen.turnCounter,
+      "currentPositionX:",
+      this.currentPosX,
+      "currentPositionY:",
+      this.currentPosY
+    );
+  }
 
   updatePosition() {
     if (this.turnCounter === null) {
       switch (this.direction) {
         case "Down":
           this.firstCornerY += 2;
+          this.currentPosY += 2;
 
           break;
         case "Right":
           this.firstCornerX += 2;
+          this.currentPosX += 2;
 
           break;
         case "Up":
           this.firstCornerY -= 2;
+          this.currentPosY -= 2;
 
           break;
         case "Left":
           this.firstCornerX -= 2;
+          this.currentPosX -= 2;
           break;
       }
       this.secondCornerX = this.firstCornerX;
       this.secondCornerY = this.firstCornerY;
-      this.endPosX = this.firstCornerX;
-      this.endPosY = this.firstCornerY;
+      this.lastCornerX = this.firstCornerX;
+      this.lastCornerY = this.firstCornerY;
     } else if (this.turnCounter === 1) {
       switch (this.direction) {
         case "Down":
           this.secondCornerY += 2;
+          this.currentPosY += 2;
 
           break;
         case "Right":
           this.secondCornerX += 2;
+          this.currentPosX += 2;
 
           break;
         case "Up":
           this.secondCornerY -= 2;
+          this.currentPosY -= 2;
 
           break;
         case "Left":
           this.secondCornerX -= 2;
+          this.currentPosX -= 2;
           break;
       }
-      this.endPosX = this.secondCornerX;
-      this.endPosY = this.secondCornerY;
+      this.lastCornerX = this.secondCornerX;
+      this.lastCornerY = this.secondCornerY;
     } else if (this.turnCounter === 2) {
       switch (this.direction) {
         case "Down":
-          this.endPosY += 2;
+          this.lastCornerY += 2;
+          this.currentPosY += 2;
 
           break;
         case "Right":
-          this.endPosX += 2;
+          this.lastCornerX += 2;
+          this.currentPosX += 2;
 
           break;
         case "Up":
-          this.endPosY -= 2;
+          this.lastCornerY -= 2;
+          this.currentPosY -= 2;
 
           break;
         case "Left":
-          this.endPosX -= 2;
+          this.lastCornerX -= 2;
+          this.currentPosX -= 2;
           break;
       }
     }
@@ -197,17 +241,40 @@ let pen = new Pen();
 
 window.addEventListener("load", () => {
   pen.pickRandomStart();
-  console.log(pen);
 });
 
 window.addEventListener("keydown", (event) => {
-  pen.updateDirection(event.key);
-  console.log(JSON.stringify(pen));
+  if (pen.turnCounter < 2 && event.key.includes("Arrow")) {
+    pen.updateDirection(event.key);
+  } else if (pen.turnCounter <= 2 && !event.key.includes("Arrow")) {
+    window.alert("Use your arrow keys please!");
+  } else if (pen.turnCounter >= 2 && event.key.includes("Arrow")) {
+    window.alert("You can't turn more than twice");
+  }
 });
 
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   pen.updatePosition();
   pen.draw();
-  console.log(JSON.stringify(pen));
+  if (pen.turnCounter === null) {
+    if (pen.startPosX === 0 && pen.lastCornerX === 800) {
+      pen._saveShape();
+    } else if (pen.startPosX === 800 && pen.lastCornerX === 0) {
+      pen._saveShape();
+    } else if (pen.startPosY === 0 && pen.lastCornerY === 800) {
+      pen._saveShape();
+    } else if (pen.startPosY === 800 && pen.lastCornerY === 0) {
+      pen._saveShape();
+    }
+  } else if (pen.turnCounter >= 1) {
+    if (
+      pen.lastCornerX === 800 ||
+      pen.lastCornerX === 0 ||
+      pen.lastCornerY === 800 ||
+      pen.lastCornerY === 0
+    ) {
+      pen._saveShape();
+    }
+  }
 }, 1000 / 60);
