@@ -32,9 +32,6 @@ class Pen {
     this.lastCornerX = null;
     this.lastCornerY = null;
 
-    this.currentPosX = null;
-    this.currentPosY = null;
-
     this.turnCounter = null;
   }
 
