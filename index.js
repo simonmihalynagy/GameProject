@@ -54,6 +54,19 @@ let drawShapes = function (shapes) {
           ctx.fillRect(0, 0, shape.startPosX, canvas.height);
         }
       }
+    } else if (Object.keys(shape).length === 6) {
+      if (shape.startPosX === 0) {
+        if (shape.lastCornerY === 0) {
+          ctx.fillRect(0, 0, shape.firstCornerX, shape.firstCornerY);
+        } else if (shape.lastCornerY === canvas.height) {
+          ctx.fillRect(
+            shape.startPosX,
+            shape.startPosY,
+            shape.lastCornerX,
+            shape.lastCornerY
+          );
+        }
+      }
     }
   });
 };
