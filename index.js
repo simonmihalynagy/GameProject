@@ -5,15 +5,57 @@ const directions = ["Up", "Down", "Left", "Right"];
 
 let shapes = [];
 
-let drawShapes = (shapes) => {
-  shapes.map((shape) =>
-    ctx.fillRect(
-      shape.startPosX,
-      shape.startPosY,
-      Math.abs(shape.startPosX - canvas.width),
-      Math.abs(shape.startPosY - canvas.height)
-    )
-  );
+let drawShapes = function (shapes) {
+  shapes.forEach((shape) => {
+    if (Object.keys(shape).length === 4) {
+      if (shape.startPosX === 0) {
+        if (shape.startPosY > canvas.height / 2) {
+          ctx.fillRect(
+            shape.startPosX,
+            shape.startPosY,
+            canvas.width,
+            canvas.height - shape.startPosY
+          );
+        } else if (shape.startPosY <= canvas.height / 2) {
+          ctx.fillRect(0, 0, canvas.width, shape.startPosY);
+        }
+      } else if (shape.startPosX === canvas.width) {
+        if (shape.startPosY > canvas.height / 2) {
+          ctx.fillRect(
+            shape.lastCornerX,
+            shape.lastCornerY,
+            canvas.width,
+
+            canvas.height - shape.startPosY
+          );
+        } else if (shape.startPosY <= canvas.height / 2) {
+          ctx.fillRect(0, 0, canvas.width, shape.startPosY);
+        }
+      } else if (shape.startPosY === 0) {
+        if (shape.startPosX > canvas.width / 2) {
+          ctx.fillRect(
+            shape.startPosX,
+            shape.startPosY,
+            canvas.width - shape.startPosX,
+            canvas.height
+          );
+        } else if (shape.startPosX <= canvas.width / 2) {
+          ctx.fillRect(0, 0, shape.startPosX, canvas.height);
+        }
+      } else if (shape.startPosY === canvas.height) {
+        if (shape.startPosX > canvas.width / 2) {
+          ctx.fillRect(
+            shape.lastCornerX,
+            shape.lastCornerY,
+            canvas.width - shape.startPosX,
+            canvas.height
+          );
+        } else if (shape.startPosX <= canvas.width / 2) {
+          ctx.fillRect(0, 0, shape.startPosX, canvas.height);
+        }
+      }
+    }
+  });
 };
 
 class Pen {
