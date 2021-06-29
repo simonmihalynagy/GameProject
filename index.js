@@ -67,9 +67,245 @@ let drawShapes = function (shapes) {
           );
         }
       }
+      if (shape.startPosX === canvas.width) {
+        if (shape.lastCornerY === 0) {
+          ctx.fillRect(
+            shape.lastCornerX,
+            shape.lastCornerY,
+            shape.startPosX,
+            shape.startPosY
+          );
+        } else if (shape.lastCornerY === canvas.height) {
+          ctx.fillRect(
+            shape.firstCornerX,
+            shape.firstCornerY,
+            canvas.width - shape.firstCornerX,
+            canvas.height - shape.startPosY
+          );
+        }
+      }
+      if (shape.startPosY === 0) {
+        if (shape.lastCornerX === 0) {
+          ctx.fillRect(0, 0, shape.startPosX, shape.firstCornerY);
+        } else if (shape.lastCornerX === canvas.width) {
+          ctx.fillRect(
+            shape.startPosX,
+            shape.startPosY,
+            canvas.width - shape.startPosX,
+            shape.lastCornerY
+          );
+        }
+      }
+      if (shape.startPosY === canvas.height) {
+        if (shape.lastCornerX === 0) {
+          ctx.fillRect(
+            shape.lastCornerX,
+            shape.lastCornerY,
+            shape.firstCornerX,
+            canvas.height - shape.firstCornerY
+          );
+        } else if (shape.lastCornerX === canvas.width) {
+          ctx.fillRect(
+            shape.firstCornerX,
+            shape.firstCornerY,
+            canvas.width - shape.firstCornerX,
+            canvas.height - shape.lastCornerY
+          );
+        }
+      }
+    } else if (Object.keys(shape).length === 8) {
+      if (shape.startPosX === 0) {
+        if (shape.lastCornerX === 0 && shape.startPosY > shape.lastCornerY) {
+          ctx.fillRect(
+            shape.lastCornerX,
+            shape.lastCornerY,
+            shape.secondCornerX,
+            shape.startPosY - shape.lastCornerY
+          );
+        } else if (
+          shape.lastCornerX === 0 &&
+          shape.startPosY < shape.lastCornerY
+        ) {
+          ctx.fillRect(
+            shape.startPosX,
+            shape.startPosY,
+            shape.secondCornerX,
+            shape.lastCornerY - shape.startPosY
+          );
+        } else if (
+          shape.startPosX === 0 &&
+          shape.lastCornerX === canvas.width
+        ) {
+          if (shape.startPosY < canvas.height / 2) {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(canvas.width, 0);
+            ctx.lineTo(0, 0);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          } else {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          }
+        }
+      } else if (shape.startPosX === canvas.width) {
+        if (
+          shape.lastCornerX === canvas.width &&
+          shape.startPosY > shape.lastCornerY
+        ) {
+          ctx.fillRect(
+            shape.secondCornerX,
+            shape.secondCornerY,
+            canvas.width - shape.secondCornerX,
+            shape.startPosY - shape.lastCornerY
+          );
+        } else if (
+          shape.lastCornerX === canvas.width &&
+          shape.startPosY < shape.lastCornerY
+        ) {
+          ctx.fillRect(
+            shape.firstCornerX,
+            shape.firstCornerY,
+            canvas.width - shape.firstCornerX,
+            shape.lastCornerY - shape.startPosY
+          );
+        } else if (
+          shape.startPosX === canvas.width &&
+          shape.lastCornerX === 0
+        ) {
+          if (shape.startPosY < canvas.height / 2) {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(0, 0);
+            ctx.lineTo(canvas.width, 0);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          } else {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(0, canvas.height);
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          }
+        }
+      } else if (shape.startPosY === 0) {
+        if (shape.lastCornerY === 0 && shape.startPosX < shape.lastCornerX) {
+          ctx.fillRect(
+            shape.startPosX,
+            shape.startPosY,
+            shape.lastCornerX - shape.startPosX,
+            shape.firstCornerY
+          );
+        } else if (
+          shape.lastCornerY === 0 &&
+          shape.startPosX > shape.lastCornerX
+        ) {
+          ctx.fillRect(
+            shape.lastCornerX,
+            shape.lastCornerY,
+            shape.startPosX - shape.lastCornerX,
+            shape.firstCornerY
+          );
+        } else if (
+          shape.startPosY === 0 &&
+          shape.lastCornerY === canvas.height
+        ) {
+          if (shape.startPosX < canvas.width / 2) {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(0, canvas.height);
+            ctx.lineTo(0, 0);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          } else {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(canvas.width, 0);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          }
+        }
+      } else if (shape.startPosY === canvas.height) {
+        if (
+          shape.lastCornerY === canvas.height &&
+          shape.startPosX < shape.lastCornerX
+        ) {
+          ctx.fillRect(
+            shape.firstCornerX,
+            shape.firstCornerY,
+            shape.lastCornerX - shape.firstCornerX,
+            canvas.height - shape.firstCornerY
+          );
+        } else if (
+          shape.lastCornerY === canvas.height &&
+          shape.startPosX > shape.lastCornerX
+        ) {
+          ctx.fillRect(
+            shape.secondCornerX,
+            shape.secondCornerY,
+            shape.firstCornerX - shape.secondCornerX,
+            canvas.height - shape.firstCornerY
+          );
+        } else if (
+          shape.startPosY === canvas.height &&
+          shape.lastCornerY === 0
+        ) {
+          if (shape.startPosX < canvas.width / 2) {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(0, 0);
+            ctx.lineTo(0, canvas.height);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          } else {
+            ctx.beginPath();
+            ctx.moveTo(shape.startPosX, shape.startPosY);
+            ctx.lineTo(shape.firstCornerX, shape.firstCornerY);
+            ctx.lineTo(shape.secondCornerX, shape.secondCornerY);
+            ctx.lineTo(shape.lastCornerX, shape.lastCornerY);
+            ctx.lineTo(canvas.width, 0);
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(shape.startPosX, shape.startPosY);
+            ctx.fill();
+          }
+        }
+      }
     }
   });
 };
+
+
+let ball = {
+  startX : 
+  startY : ball.startX
+}
 
 class Pen {
   constructor() {
@@ -93,7 +329,7 @@ class Pen {
   pickRandomStart() {
     if (this.direction === "Up") {
       this.startPosX = Math.floor(Math.random() * (790 - 10) + 1);
-      this.startPosY = 800;
+      this.startPosY = canvas.height;
       this.firstCornerX = this.startPosX;
       this.firstCornerY = this.startPosY;
       this.secondCornerX = this.startPosX;
@@ -121,7 +357,7 @@ class Pen {
       this.lastCornerY = this.startPosY;
     }
     if (this.direction === "Left") {
-      this.startPosX = 800;
+      this.startPosX = canvas.width;
       this.startPosY = Math.floor(Math.random() * (790 - 10) + 1);
       this.firstCornerX = this.startPosX;
       this.firstCornerY = this.startPosY;
@@ -229,19 +465,19 @@ class Pen {
     if (this.turnCounter === null) {
       switch (this.direction) {
         case "Down":
-          this.firstCornerY += 2;
+          this.firstCornerY += 1;
 
           break;
         case "Right":
-          this.firstCornerX += 2;
+          this.firstCornerX += 1;
 
           break;
         case "Up":
-          this.firstCornerY -= 2;
+          this.firstCornerY -= 1;
 
           break;
         case "Left":
-          this.firstCornerX -= 2;
+          this.firstCornerX -= 1;
 
           break;
       }
@@ -252,19 +488,19 @@ class Pen {
     } else if (this.turnCounter === 1) {
       switch (this.direction) {
         case "Down":
-          this.secondCornerY += 2;
+          this.secondCornerY += 1;
 
           break;
         case "Right":
-          this.secondCornerX += 2;
+          this.secondCornerX += 1;
 
           break;
         case "Up":
-          this.secondCornerY -= 2;
+          this.secondCornerY -= 1;
 
           break;
         case "Left":
-          this.secondCornerX -= 2;
+          this.secondCornerX -= 1;
 
           break;
       }
@@ -273,19 +509,19 @@ class Pen {
     } else if (this.turnCounter === 2) {
       switch (this.direction) {
         case "Down":
-          this.lastCornerY += 2;
+          this.lastCornerY += 1;
 
           break;
         case "Right":
-          this.lastCornerX += 2;
+          this.lastCornerX += 1;
 
           break;
         case "Up":
-          this.lastCornerY -= 2;
+          this.lastCornerY -= 1;
 
           break;
         case "Left":
-          this.lastCornerX -= 2;
+          this.lastCornerX -= 1;
 
           break;
       }
@@ -311,7 +547,7 @@ window.addEventListener("keydown", (event) => {
 
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawShapes(shapes);
+
   pen.updatePosition();
   pen.draw();
   if (pen.turnCounter === null) {
@@ -334,4 +570,5 @@ setInterval(() => {
       pen._saveShape();
     }
   }
-}, 1000 / 60);
+  drawShapes(shapes);
+}, 1000 / 120);
