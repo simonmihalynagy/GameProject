@@ -5,6 +5,17 @@ const directions = ["Up", "Down", "Left", "Right"];
 
 let shapes = [];
 
+let penCurrentPosition = [];
+
+let checkBallLineCollision = () => {
+  penCurrentPosition.map((position) => {
+    if (position.x === ball.x && position.y === ball.y) {
+      pen.pickRandomStart();
+      penCurrentPosition = [];
+    }
+  });
+};
+
 class Ball {
   constructor() {
     this.x = null;
@@ -376,6 +387,7 @@ setInterval(() => {
   ball._draw();
 
   pen.updatePosition();
+  pen.saveCurrentPosition();
   pen.draw();
   if (pen.turnCounter === null) {
     if (pen.startPosX === 0 && pen.lastCornerX === 800) {
@@ -399,4 +411,5 @@ setInterval(() => {
   }
   drawShapes(shapes);
   intersectShapes(ball, shapes);
+  checkBallLineCollision();
 }, 1000 / 120);
