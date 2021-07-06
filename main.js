@@ -1,21 +1,20 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
+let canvasArea = canvas.height * canvas.width;
+
 const directions = ["Up", "Down", "Left", "Right"];
 
 let shapes = [];
 
-let penCurrentPosition = [];
-
 let checkBallLineCollision = () => {
-  penCurrentPosition.map((position) => {
+  pen.currentPosition.map((position) => {
     if (
       (position.x === ball.x && position.y === ball.y) ||
       (position.x === ball.x && position.y === ball.y + ball.height) ||
       (position.x === ball.x + ball.width && position.y === ball.y + ball.width)
     ) {
-      pen.pickRandomStart();
-      penCurrentPosition = [];
+      newPen();
     }
   });
 };
@@ -29,6 +28,35 @@ let checkBallWallsCollision = () => {
   }
 };
 
+let checkPenShapeCollision = () => {
+  let collidingShapes = shapes.filter((shape) => {
+    let shapeLeft = shape.x;
+    let shapeRight = shape.x + shape.width;
+    let shapeTop = shape.y;
+    let shapeBottom = shape.y + shape.height;
+
+    let penX = pen.lastCornerX;
+    let penY = pen.lastCornerY;
+
+    if (penX === shapeRight || penX === shapeLeft) {
+      if (penY >= shapeTop && penY <= shapeBottom) {
+        //pen.jumpThrough(shape);
+
+        return true;
+      }
+    }
+    if (penY === shapeTop || penY === shapeBottom) {
+      if (penX >= shapeLeft && penX <= shapeRight) {
+        //pen.jumpThrough(shape);
+
+        return true;
+      }
+    }
+    return false;
+  });
+  return collidingShapes;
+};
+
 let checkBallShapeCollision = () => {
   shapes.map((shape) => {
     let ballLeft = ball.x;
@@ -40,11 +68,22 @@ let checkBallShapeCollision = () => {
     let shapeTop = shape.y;
     let shapeBottom = shape.y + shape.height;
 
-    if (ballLeft < shapeRight || ballRight > shapeLeft) {
-      ball.xSpeed = -ball.xSpeed;
+    if (ballLeft === shapeRight || ballRight === shapeLeft) {
+      if (ballBottom >= shapeTop && ballTop <= shapeBottom)
+        ball.xSpeed = -ball.xSpeed;
     }
-    if (ballTop > shapeBottom || ballBottom < shapeTop) {
-      ball.ySpeed = -ball.ySpeed;
+    if (ballTop === shapeBottom || ballBottom === shapeTop) {
+      if (ballRight >= shapeLeft && ballLeft <= shapeRight) {
+        ball.ySpeed = -ball.ySpeed;
+      }
+    }
+    if (
+      ballLeft > shapeLeft &&
+      ballRight < shapeRight &&
+      ballTop > shapeTop &&
+      ballBottom < shapeBottom
+    ) {
+      ball._pickRandomStart();
     }
   });
 };
@@ -57,10 +96,11 @@ class Ball {
     this.height = 20;
     this.xSpeed = 1;
     this.ySpeed = 1;
+    //this.radius = 10;
   }
   _pickRandomStart() {
     this.x = Math.floor(Math.random() * (790 - 10) + 1);
-    this.y = this.x;
+    this.y = Math.floor(Math.random() * (790 - 10) + 1);
   }
   _move() {
     this.x += this.xSpeed;
@@ -68,10 +108,15 @@ class Ball {
   }
   _draw() {
     ctx.fillRect(this.x, this.y, this.width, this.height);
+    // ctx.beginPath();
+    // ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    // ctx.fill();
+    // ctx.closePath();
   }
 }
 
 let drawShapes = function (shapes) {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
   shapes.forEach((shape) => {
     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
   });
@@ -81,7 +126,7 @@ let pen = new Pen();
 let ball = new Ball();
 
 window.addEventListener("load", () => {
-  pen.pickRandomStart();
+  newPen();
   ball._pickRandomStart();
 });
 
@@ -95,6 +140,45 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+const newPen = () => {
+  console.log("called new pen");
+  pen = new Pen();
+  pen.pickRandomStart();
+  let collidingShapes = checkPenShapeCollision();
+
+  if (collidingShapes.length > 0) {
+    if (pen.direction === "Left" || pen.direction === "Right") {
+      collidingShapes.sort((shape1, shape2) => {
+        return shape2.width - shape1.width;
+      });
+    } else if (pen.direction === "Up" || "Down") {
+      collidingShapes.sort((shape1, shape2) => {
+        return shape2.height - shape1.height;
+      });
+    }
+
+    let widestOrHighestShape = collidingShapes[0];
+
+    if (pen.direction === "Up" || pen.direction === "Down") {
+      if (widestOrHighestShape.height === canvas.height) {
+        newPen();
+        return;
+      }
+    } else if (pen.direction === "Right" || pen.direction === "Left") {
+      if (widestOrHighestShape.width === canvas.width) {
+        newPen();
+        return;
+      }
+    }
+    let pixels =
+      pen.direction === "Up" || pen.direction === "Down"
+        ? widestOrHighestShape.height
+        : widestOrHighestShape.width;
+    console.log("pixels", pixels);
+    pen.shiftBy(pixels);
+  }
+};
+
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -107,12 +191,16 @@ setInterval(() => {
   if (pen.turnCounter === null) {
     if (pen.startPosX === 0 && pen.lastCornerX === 800) {
       pen._saveShape();
+      newPen();
     } else if (pen.startPosX === 800 && pen.lastCornerX === 0) {
       pen._saveShape();
+      newPen();
     } else if (pen.startPosY === 0 && pen.lastCornerY === 800) {
       pen._saveShape();
+      newPen();
     } else if (pen.startPosY === 800 && pen.lastCornerY === 0) {
       pen._saveShape();
+      newPen();
     }
   } else if (pen.turnCounter >= 1) {
     if (
@@ -122,10 +210,12 @@ setInterval(() => {
       pen.lastCornerY === 0
     ) {
       pen._saveShape();
+      newPen();
     }
   }
   drawShapes(shapes);
-  checkBallWallsCollision();
   checkBallLineCollision();
+  checkBallWallsCollision();
+  checkPenShapeCollision();
   checkBallShapeCollision();
 }, 1000 / 120);

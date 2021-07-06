@@ -15,6 +15,8 @@ class Pen {
     this.lastCornerY = null;
 
     this.turnCounter = null;
+
+    this.currentPosition = [];
   }
 
   saveCurrentPosition() {
@@ -24,7 +26,7 @@ class Pen {
       pen.lastCornerY < canvas.height ||
       pen.lastCornerY > 0
     ) {
-      penCurrentPosition.push({
+      this.currentPosition.push({
         x: this.lastCornerX,
         y: this.lastCornerY,
       });
@@ -50,8 +52,7 @@ class Pen {
       this.secondCornerY = this.startPosY;
       this.lastCornerX = this.startPosX;
       this.lastCornerY = this.startPosY;
-    }
-    if (this.direction === "Right") {
+    } else if (this.direction === "Right") {
       this.startPosX = 0;
       this.startPosY = Math.floor(Math.random() * (790 - 10) + 1);
       this.firstCornerX = this.startPosX;
@@ -60,8 +61,7 @@ class Pen {
       this.secondCornerY = this.startPosY;
       this.lastCornerX = this.startPosX;
       this.lastCornerY = this.startPosY;
-    }
-    if (this.direction === "Left") {
+    } else if (this.direction === "Left") {
       this.startPosX = canvas.width;
       this.startPosY = Math.floor(Math.random() * (790 - 10) + 1);
       this.firstCornerX = this.startPosX;
@@ -70,6 +70,93 @@ class Pen {
       this.secondCornerY = this.startPosY;
       this.lastCornerX = this.startPosX;
       this.lastCornerY = this.startPosY;
+    }
+  }
+
+  jumpThrough(shape) {
+    // if (
+    //   pen.lastCornerX >= 800 ||
+    //   pen.lastCornerX <= 0 ||
+    //   pen.lastCornerY >= 800 ||
+    //   pen.lastCornerY <= 0
+    // ) {
+    //   return;
+    // }
+    //console.table(pen);
+    if (this.turnCounter === null) {
+      if (this.direction === "Left") {
+        this.firstCornerX -= shape.width;
+        this.secondCornerX = this.firstCornerX;
+        this.lastCornerX = this.firstCornerX;
+      } else if (this.direction === "Right") {
+        this.firstCornerX += shape.width;
+        this.secondCornerX = this.firstCornerX;
+        this.lastCornerX = this.firstCornerX;
+      } else if (this.direction === "Up") {
+        this.firstCornerY -= shape.height;
+        this.secondCornerY = this.firstCornerY;
+        this.lastCornerY = this.firstCornerY;
+      } else if (this.direction === "Down") {
+        this.firstCornerY += shape.height;
+        this.secondCornerY = this.firstCornerY;
+        this.lastCornerY = this.firstCornerY;
+      }
+    } else if (this.turnCounter === 1) {
+      if (this.direction === "Left") {
+        this.secondCornerX -= shape.width;
+
+        this.lastCornerX = this.secondCornerX;
+      } else if (this.direction === "Right") {
+        this.secondCornerX += shape.width;
+
+        this.lastCornerX = this.secondCornerX;
+      } else if (this.direction === "Up") {
+        this.secondCornerY -= shape.height;
+
+        this.lastCornerY = this.secondCornerY;
+      } else if (this.direction === "Down") {
+        this.secondCornerY += shape.height;
+
+        this.lastCornerY = this.secondCornerY;
+      }
+    } else if (this.turnCounter === 2) {
+      if (this.direction === "Left") {
+        this.lastCornerX -= shape.width;
+      } else if (this.direction === "Right") {
+        this.lastCornerX += shape.width;
+      } else if (this.direction === "Up") {
+        this.lastCornerY -= shape.height;
+      } else if (this.direction === "Down") {
+        this.lastCornerY += shape.height;
+      }
+    }
+  }
+
+  shiftBy(pixels) {
+    if (this.direction === "Up") {
+      this.firstCornerY = canvas.height - pixels;
+
+      this.secondCornerY = this.firstCornerY;
+
+      this.lastCornerY = this.firstCornerY;
+    } else if (this.direction === "Down") {
+      this.firstCornerY = 0 + pixels;
+
+      this.secondCornerY = this.firstCornerY;
+
+      this.lastCornerY = this.firstCornerY;
+    } else if (this.direction === "Right") {
+      this.firstCornerX = 0 + pixels;
+
+      this.secondCornerX = this.firstCornerX;
+
+      this.lastCornerX = this.firstCornerX;
+    } else if (this.direction === "Left") {
+      this.firstCornerX = canvas.width - pixels;
+
+      this.secondCornerX = this.firstCornerX;
+
+      this.lastCornerX = this.firstCornerX;
     }
   }
 
@@ -91,13 +178,13 @@ class Pen {
   }
 
   updateDirection(key) {
-    this._turnCount();
-
     if (this.direction === "Down") {
       if (key === "ArrowLeft") {
         this.direction = "Left";
+        this._turnCount();
       } else if (key === "ArrowRight") {
         this.direction = "Right";
+        this._turnCount();
       } else if (key === "ArrowUp") {
         window.alert("You can't turn back");
       }
@@ -105,8 +192,10 @@ class Pen {
     if (this.direction === "Right") {
       if (key === "ArrowUp") {
         this.direction = "Up";
+        this._turnCount();
       } else if (key === "ArrowDown") {
         this.direction = "Down";
+        this._turnCount();
       } else if (key === "ArrowLeft") {
         window.alert("You can't turn back");
       }
@@ -114,8 +203,10 @@ class Pen {
     if (this.direction === "Up") {
       if (key === "ArrowLeft") {
         this.direction = "Left";
+        this._turnCount();
       } else if (key === "ArrowRight") {
         this.direction = "Right";
+        this._turnCount();
       } else if (key === "ArrowDown") {
         window.alert("You can't turn back");
       }
@@ -123,8 +214,10 @@ class Pen {
     if (this.direction === "Left") {
       if (key === "ArrowUp") {
         this.direction = "Up";
+        this._turnCount();
       } else if (key === "ArrowDown") {
         this.direction = "Down";
+        this._turnCount();
       } else if (key === "ArrowRight") {
         window.alert("You can't turn back");
       }
@@ -133,6 +226,7 @@ class Pen {
 
   _turnCount() {
     this.turnCounter++;
+    console.log(this.turnCounter);
   }
   _saveShape() {
     if (this.turnCounter === null) {
@@ -144,7 +238,6 @@ class Pen {
             width: canvas.width,
             height: canvas.height - this.startPosY,
           });
-          this.turnCounter = null;
         } else if (this.startPosY <= canvas.height / 2) {
           shapes.push({
             x: 0,
@@ -152,7 +245,6 @@ class Pen {
             width: canvas.width,
             height: this.startPosY,
           });
-          this.turnCounter = null;
         }
       } else if (this.startPosX === canvas.width) {
         if (this.startPosY > canvas.height / 2) {
@@ -162,7 +254,6 @@ class Pen {
             width: canvas.width,
             height: canvas.height - this.startPosY,
           });
-          this.turnCounter = null;
         } else if (this.startPosY <= canvas.height / 2) {
           shapes.push({
             x: 0,
@@ -170,7 +261,6 @@ class Pen {
             width: canvas.width,
             height: this.startPosY,
           });
-          this.turnCounter = null;
         }
       } else if (this.startPosY === 0) {
         if (this.startPosX > canvas.width / 2) {
@@ -180,7 +270,6 @@ class Pen {
             width: canvas.width - this.startPosX,
             height: canvas.height,
           });
-          this.turnCounter = null;
         } else if (this.startPosX <= canvas.width / 2) {
           shapes.push({
             x: 0,
@@ -188,7 +277,6 @@ class Pen {
             width: this.startPosX,
             height: canvas.height,
           });
-          this.turnCounter = null;
         }
       } else if (this.startPosY === canvas.height) {
         if (this.startPosX > canvas.width / 2) {
@@ -198,7 +286,6 @@ class Pen {
             width: canvas.width - this.startPosX,
             height: canvas.height,
           });
-          this.turnCounter = null;
         } else if (this.startPosX <= canvas.width / 2) {
           shapes.push({
             x: 0,
@@ -206,7 +293,6 @@ class Pen {
             width: this.startPosX,
             height: canvas.height,
           });
-          this.turnCounter = null;
         }
       }
     } else if (this.turnCounter === 1) {
@@ -218,7 +304,6 @@ class Pen {
             width: this.firstCornerX,
             height: this.firstCornerY,
           });
-          this.turnCounter = null;
         } else if (this.lastCornerY === canvas.height) {
           shapes.push({
             x: this.startPosX,
@@ -226,7 +311,6 @@ class Pen {
             width: this.lastCornerX,
             height: canvas.height - this.firstCornerY,
           });
-          this.turnCounter = null;
         }
       }
       if (this.startPosX === canvas.width) {
@@ -237,7 +321,6 @@ class Pen {
             width: canvas.width - this.firstCornerX,
             height: this.firstCornerY,
           });
-          this.turnCounter = null;
         } else if (this.lastCornerY === canvas.height) {
           shapes.push({
             x: this.firstCornerX,
@@ -245,7 +328,6 @@ class Pen {
             width: canvas.width - this.firstCornerX,
             height: this.firstCornerY,
           });
-          this.turnCounter = null;
         }
       }
       if (this.startPosY === 0) {
@@ -256,7 +338,6 @@ class Pen {
             width: this.firstCornerX,
             height: this.firstCornerY,
           });
-          this.turnCounter = null;
         } else if (this.lastCornerX === canvas.width) {
           shapes.push({
             x: this.startPosX,
@@ -264,7 +345,6 @@ class Pen {
             width: canvas.width - this.startPosX,
             height: this.lastCornerY,
           });
-          this.turnCounter = null;
         }
       }
       if (this.startPosY === canvas.height) {
@@ -275,7 +355,6 @@ class Pen {
             width: this.firstCornerX,
             height: canvas.height - this.firstCornerY,
           });
-          this.turnCounter = null;
         } else if (this.lastCornerX === canvas.width) {
           shapes.push({
             x: this.firstCornerX,
@@ -283,7 +362,6 @@ class Pen {
             width: canvas.width - this.firstCornerX,
             height: canvas.height - this.firstCornerY,
           });
-          this.turnCounter = null;
         }
       }
     } else if (this.turnCounter === 2) {
@@ -295,7 +373,6 @@ class Pen {
             width: this.secondCornerX,
             height: this.startPosY - this.lastCornerY,
           });
-          this.turnCounter = null;
         } else if (
           this.lastCornerX === 0 &&
           this.startPosY < this.lastCornerY
@@ -306,7 +383,6 @@ class Pen {
             width: this.secondCornerX,
             height: this.lastCornerY - this.startPosY,
           });
-          this.turnCounter = null;
         } else if (this.startPosX === 0 && this.lastCornerX === canvas.width) {
           if (this.startPosY < canvas.height / 2) {
             shapes.push(
@@ -320,10 +396,9 @@ class Pen {
                 x: this.firstCornerX,
                 y: 0,
                 width: canvas.width - this.firstCornerX,
-                height: Math.abs(this.secondCornerY - canvas.height),
+                height: this.secondCornerY,
               }
             );
-            this.turnCounter = null;
           } else {
             shapes.push(
               {
@@ -336,10 +411,9 @@ class Pen {
                 x: this.secondCornerX,
                 y: this.secondCornerY,
                 width: canvas.width - this.firstCornerX,
-                height: Math.abs(this.secondCornerY - canvas.height),
+                height: canvas.height - this.secondCornerY,
               }
             );
-            this.turnCounter = null;
           }
         }
       } else if (this.startPosX === canvas.width) {
@@ -353,7 +427,6 @@ class Pen {
             width: canvas.width - this.firstCornerX,
             height: this.firstCornerY - this.secondCornerY,
           });
-          this.turnCounter = null;
         } else if (
           this.lastCornerX === canvas.width &&
           this.startPosY < this.lastCornerY
@@ -364,24 +437,22 @@ class Pen {
             width: canvas.width - this.firstCornerX,
             height: this.secondCornerY - this.firstCornerY,
           });
-          this.turnCounter = null;
         } else if (this.startPosX === canvas.width && this.lastCornerX === 0) {
-          if (shape.startPosY < canvas.height / 2) {
+          if (this.startPosY < canvas.height / 2) {
             shapes.push(
               {
                 x: 0,
                 y: 0,
                 width: this.firstCornerX,
-                height: this.firstCornerY,
+                height: this.secondCornerY,
               },
               {
                 x: this.firstCornerX,
-                y: this.firstCornerX,
+                y: 0,
                 width: canvas.width - this.firstCornerX,
-                height: canvas.height - this.secondCornerY,
+                height: this.firstCornerY,
               }
             );
-            this.turnCounter = null;
           } else {
             shapes.push(
               {
@@ -397,7 +468,6 @@ class Pen {
                 height: canvas.height - this.firstCornerY,
               }
             );
-            this.turnCounter = null;
           }
         }
       } else if (this.startPosY === 0) {
@@ -408,10 +478,9 @@ class Pen {
             width: this.lastCornerX - this.firstCornerX,
             height: this.firstCornerY,
           });
-          this.turnCounter = null;
         } else if (
-          shape.lastCornerY === 0 &&
-          shape.startPosX > shape.lastCornerX
+          this.lastCornerY === 0 &&
+          this.startPosX > this.lastCornerX
         ) {
           shapes.push({
             x: this.lastCornerX,
@@ -419,12 +488,8 @@ class Pen {
             width: this.startPosX - this.lastCornerX,
             height: this.firstCornerY,
           });
-          this.turnCounter = null;
-        } else if (
-          shape.startPosY === 0 &&
-          shape.lastCornerY === canvas.height
-        ) {
-          if (shape.startPosX < canvas.width / 2) {
+        } else if (this.startPosY === 0 && this.lastCornerY === canvas.height) {
+          if (this.startPosX < canvas.width / 2) {
             shapes.push(
               {
                 x: 0,
@@ -435,11 +500,10 @@ class Pen {
               {
                 x: 0,
                 y: this.firstCornerY,
-                width: this.firstCornerX,
+                width: this.secondCornerX,
                 height: canvas.height - this.firstCornerY,
               }
             );
-            this.turnCounter = null;
           } else {
             shapes.push(
               {
@@ -449,13 +513,12 @@ class Pen {
                 height: this.firstCornerY,
               },
               {
-                x: this.firstCornerX,
-                y: this.firstCornerX,
-                width: canvas.width - this.firstCornerX,
+                x: this.secondCornerX,
+                y: this.secondCornerY,
+                width: canvas.width - this.secondCornerX,
                 height: canvas.height - this.firstCornerY,
               }
             );
-            this.turnCounter = null;
           }
         }
       } else if (this.startPosY === canvas.height) {
@@ -469,10 +532,9 @@ class Pen {
             width: this.lastCornerX - this.firstCornerX,
             height: canvas.height - this.firstCornerY,
           });
-          this.turnCounter = null;
         } else if (
-          shape.lastCornerY === canvas.height &&
-          shape.startPosX > shape.lastCornerX
+          this.lastCornerY === canvas.height &&
+          this.startPosX > this.lastCornerX
         ) {
           shapes.push({
             x: this.secondCornerX,
@@ -480,12 +542,8 @@ class Pen {
             width: this.firstCornerX - this.secondCornerX,
             height: canvas.height - this.firstCornerY,
           });
-          this.turnCounter = null;
-        } else if (
-          shape.startPosY === canvas.height &&
-          shape.lastCornerY === 0
-        ) {
-          if (shape.startPosX < canvas.width / 2) {
+        } else if (this.startPosY === canvas.height && this.lastCornerY === 0) {
+          if (this.startPosX < canvas.width / 2) {
             shapes.push(
               {
                 x: 0,
@@ -500,7 +558,6 @@ class Pen {
                 height: this.secondCornerY,
               }
             );
-            this.turnCounter = null;
           } else {
             shapes.push(
               {
@@ -516,7 +573,6 @@ class Pen {
                 height: this.secondCornerY,
               }
             );
-            this.turnCounter = null;
           }
         }
       }
