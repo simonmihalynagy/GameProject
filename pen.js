@@ -73,61 +73,70 @@ class Pen {
     }
   }
 
+  _hasMoved() {
+    // checking if this is a completely new pen (in which case, don't jump)
+    if (
+      pen.lastCornerX >= 800 ||
+      pen.lastCornerX <= 0 ||
+      pen.lastCornerY >= 800 ||
+      pen.lastCornerY <= 0
+    ) {
+      return false;
+    } else {
+      return true
+    }
+  }
+
   jumpThrough(shape) {
-    // if (
-    //   pen.lastCornerX >= 800 ||
-    //   pen.lastCornerX <= 0 ||
-    //   pen.lastCornerY >= 800 ||
-    //   pen.lastCornerY <= 0
-    // ) {
-    //   return;
-    // }
-    //console.table(pen);
+    if (!this._hasMoved()) {
+      return
+    }
+    var { currentPosition, ...rest } = pen; console.table(rest) // debugging
     if (this.turnCounter === null) {
       if (this.direction === "Left") {
-        this.firstCornerX -= shape.width;
+        this.firstCornerX -= shape.width - 5;
         this.secondCornerX = this.firstCornerX;
         this.lastCornerX = this.firstCornerX;
       } else if (this.direction === "Right") {
-        this.firstCornerX += shape.width;
+        this.firstCornerX += shape.width - 5;
         this.secondCornerX = this.firstCornerX;
         this.lastCornerX = this.firstCornerX;
       } else if (this.direction === "Up") {
-        this.firstCornerY -= shape.height;
+        this.firstCornerY -= shape.height - 5;
         this.secondCornerY = this.firstCornerY;
         this.lastCornerY = this.firstCornerY;
       } else if (this.direction === "Down") {
-        this.firstCornerY += shape.height;
+        this.firstCornerY += shape.height - 5;
         this.secondCornerY = this.firstCornerY;
         this.lastCornerY = this.firstCornerY;
       }
     } else if (this.turnCounter === 1) {
       if (this.direction === "Left") {
-        this.secondCornerX -= shape.width;
+        this.secondCornerX -= shape.width - 5;
 
         this.lastCornerX = this.secondCornerX;
       } else if (this.direction === "Right") {
-        this.secondCornerX += shape.width;
+        this.secondCornerX += shape.width - 5;
 
         this.lastCornerX = this.secondCornerX;
       } else if (this.direction === "Up") {
-        this.secondCornerY -= shape.height;
+        this.secondCornerY -= shape.height - 5;
 
         this.lastCornerY = this.secondCornerY;
       } else if (this.direction === "Down") {
-        this.secondCornerY += shape.height;
+        this.secondCornerY += (shape.height - 5);
 
         this.lastCornerY = this.secondCornerY;
       }
     } else if (this.turnCounter === 2) {
       if (this.direction === "Left") {
-        this.lastCornerX -= shape.width;
+        this.lastCornerX -= shape.width - 5;
       } else if (this.direction === "Right") {
-        this.lastCornerX += shape.width;
+        this.lastCornerX += shape.width - 5;
       } else if (this.direction === "Up") {
-        this.lastCornerY -= shape.height;
+        this.lastCornerY -= shape.height - 5;
       } else if (this.direction === "Down") {
-        this.lastCornerY += shape.height;
+        this.lastCornerY += shape.height - 5;
       }
     }
   }
@@ -326,7 +335,7 @@ class Pen {
             x: this.firstCornerX,
             y: this.firstCornerY,
             width: canvas.width - this.firstCornerX,
-            height: this.firstCornerY,
+            height: canvas.height - this.firstCornerY,
           });
         }
       }
@@ -561,7 +570,7 @@ class Pen {
           } else {
             shapes.push(
               {
-                x: this.firstCornerY,
+                x: this.firstCornerX,
                 y: this.firstCornerY,
                 width: canvas.width - this.firstCornerX,
                 height: canvas.height - this.firstCornerY,
