@@ -28,6 +28,7 @@ let checkBallWallsCollision = () => {
   }
 };
 
+// finds the shapes that are colliding when the pen ENTERS the shape (not inside or when "exiting")
 let checkPenShapeCollision = () => {
   let collidingShapes = shapes.filter((shape) => {
     let shapeLeft = shape.x;
@@ -38,16 +39,19 @@ let checkPenShapeCollision = () => {
     let penX = pen.lastCornerX;
     let penY = pen.lastCornerY;
 
-    if (penX === shapeRight || penX === shapeLeft) {
-      if (penY >= shapeTop && penY <= shapeBottom) {
-        //pen.jumpThrough(shape);
-
+    if ((pen.direction === "Left" && penX === shapeRight) || (pen.direction === "Right" && penX === shapeLeft)) {
+      if (penY >= shapeTop && penY <= shapeBottom) {        
+        // var { currentPosition, ...rest } = pen; console.table(rest); console.table(shape) // debugging
+        pen.jumpThrough(shape);
+        // var { currentPosition, ...rest } = pen; console.table(rest); console.table(shape) // debugging
         return true;
       }
     }
-    if (penY === shapeTop || penY === shapeBottom) {
+    if ((pen.direction === "Down" && penY === shapeTop) || (pen.direction === "Up" && penY === shapeBottom)) {
       if (penX >= shapeLeft && penX <= shapeRight) {
-        //pen.jumpThrough(shape);
+        // var { currentPosition, ...rest } = pen; console.table(rest); console.table(shape) // debugging
+        pen.jumpThrough(shape);
+        // var { currentPosition, ...rest } = pen; console.table(rest); console.table(shape) // debugging
 
         return true;
       }
