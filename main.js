@@ -144,6 +144,62 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+// this is pretty much the same as for ball-shape collision check .. so ball-shape collision check could probably re-use this code
+const checkShapeCollision = (obj) => {
+  return shapes.find((shape) => {
+    let objLeft = obj.x;
+    let objRight = obj.x + obj.width;
+    let objTop = obj.y;
+    let objBottom = obj.y + obj.height;
+    let shapeLeft = shape.x;
+    let shapeRight = shape.x + shape.width;
+    let shapeTop = shape.y;
+    let shapeBottom = shape.y + shape.height;
+
+    if (objLeft === shapeRight || objRight === shapeLeft) {
+      if (objBottom >= shapeTop && objTop <= shapeBottom)
+        ball.xSpeed = -ball.xSpeed;
+    }
+    if (objTop === shapeBottom || objBottom === shapeTop) {
+      if (objRight >= shapeLeft && objLeft <= shapeRight) {
+        ball.ySpeed = -ball.ySpeed;
+      }
+    }
+    if (
+      objLeft > shapeLeft &&
+      objRight < shapeRight &&
+      objTop > shapeTop &&
+      objBottom < shapeBottom
+    ) {
+      return true
+    }
+  });
+};
+
+const checkWin = () => {
+  let totalMeshObjects = 0
+  let collidingMeshObjects = 0
+  for (let i = 40; i < canvas.width; i += 80) {
+    for (let j = 40; j < canvas.width; j += 80) {
+      totalMeshObjects++
+
+      const obj = { x: i, y: j, width: 5, height: 5 }
+      ctx.fillRect(obj.x, obj.y, obj.width, obj.height) // just for debugging
+      if (checkShapeCollision(obj)) {
+        collidingMeshObjects++
+      }
+
+    }
+  }
+  if (collidingMeshObjects / totalMeshObjects > 0.7) {
+    //alert('YOU WIN')
+    gameOver = true
+    return true
+  } else {
+    return false
+  }
+}
+
 const newPen = () => {
   console.log("called new pen");
   pen = new Pen();
@@ -183,7 +239,9 @@ const newPen = () => {
   }
 };
 
+let gameOver = false
 setInterval(() => {
+  if (gameOver) return
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ball._move();
@@ -195,15 +253,19 @@ setInterval(() => {
   if (pen.turnCounter === null) {
     if (pen.startPosX === 0 && pen.lastCornerX === 800) {
       pen._saveShape();
+      checkWin()
       newPen();
     } else if (pen.startPosX === 800 && pen.lastCornerX === 0) {
       pen._saveShape();
+      checkWin()
       newPen();
     } else if (pen.startPosY === 0 && pen.lastCornerY === 800) {
       pen._saveShape();
+      checkWin()
       newPen();
     } else if (pen.startPosY === 800 && pen.lastCornerY === 0) {
       pen._saveShape();
+      checkWin()
       newPen();
     }
   } else if (pen.turnCounter >= 1) {
@@ -214,6 +276,7 @@ setInterval(() => {
       pen.lastCornerY === 0
     ) {
       pen._saveShape();
+      checkWin()
       newPen();
     }
   }
