@@ -83,13 +83,13 @@ class Pen {
     ) {
       return false;
     } else {
-      return true
+      return true;
     }
   }
 
   jumpThrough(shape) {
     if (!this._hasMoved()) {
-      return
+      return;
     }
     //var { currentPosition, ...rest } = pen; console.table(rest) // debugging
     if (this.turnCounter === null) {
@@ -124,7 +124,7 @@ class Pen {
 
         this.lastCornerY = this.secondCornerY;
       } else if (this.direction === "Down") {
-        this.secondCornerY += (shape.height - 5);
+        this.secondCornerY += shape.height - 5;
 
         this.lastCornerY = this.secondCornerY;
       }
@@ -195,7 +195,7 @@ class Pen {
         this.direction = "Right";
         this._turnCount();
       } else if (key === "ArrowUp") {
-        window.alert("You can't turn back");
+        //window.alert("You can't turn back");
       }
     }
     if (this.direction === "Right") {
@@ -206,7 +206,7 @@ class Pen {
         this.direction = "Down";
         this._turnCount();
       } else if (key === "ArrowLeft") {
-        window.alert("You can't turn back");
+        //window.alert("You can't turn back");
       }
     }
     if (this.direction === "Up") {
@@ -217,7 +217,7 @@ class Pen {
         this.direction = "Right";
         this._turnCount();
       } else if (key === "ArrowDown") {
-        window.alert("You can't turn back");
+        //window.alert("You can't turn back");
       }
     }
     if (this.direction === "Left") {
@@ -228,7 +228,7 @@ class Pen {
         this.direction = "Down";
         this._turnCount();
       } else if (key === "ArrowRight") {
-        window.alert("You can't turn back");
+        //window.alert("You can't turn back");
       }
     }
   }

@@ -304,8 +304,8 @@ window.addEventListener("keydown", (event) => {
   if (pen.turnCounter < 2 && event.key.includes("Arrow")) {
     pen.updateDirection(event.key);
   } else if (pen.turnCounter <= 2 && !event.key.includes("Arrow")) {
-    window.alert("Use your arrow keys please!");
+    //window.alert("Use your arrow keys please!");
   } else if (pen.turnCounter >= 2 && event.key.includes("Arrow")) {
-    window.alert("You can't turn more than twice");
+    //window.alert("You can't turn more than twice");
   }
 });
