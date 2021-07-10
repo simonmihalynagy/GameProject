@@ -91,7 +91,7 @@ class Pen {
     if (!this._hasMoved()) {
       return
     }
-    var { currentPosition, ...rest } = pen; console.table(rest) // debugging
+    //var { currentPosition, ...rest } = pen; console.table(rest) // debugging
     if (this.turnCounter === null) {
       if (this.direction === "Left") {
         this.firstCornerX -= shape.width - 5;

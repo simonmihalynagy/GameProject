@@ -1,4 +1,42 @@
 #canvas {
-  background-color: blanchedalmond;
+  background-color: burlywood;
   border: 1px solid black;
+}
+
+h1 {
+  padding-bottom: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: whitesmoke;
+}
+
+h2 {
+  color: whitesmoke;
+}
+.main {
+  display: flex;
+
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+body {
+  background-image: url("/pictures/barn.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+ul {
+  font-size: large;
+  color: whitesmoke;
+}
+
+.main__leftSide {
+  flex-direction: column;
 }
