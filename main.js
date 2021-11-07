@@ -113,12 +113,12 @@ class Ball {
   constructor() {
     this.x = null;
     this.y = null;
-    this.width = 30;
+    this.width = 20;
     this.height = 20;
     this.xSpeed = 1;
     this.ySpeed = 1;
-    this.img = new Image();
-    this.img.src = "/pictures/piggy.png";
+    // this.img = new Image();
+    // this.img.src = "/pictures/piggy.png";
   }
   _pickRandomStart() {
     this.x = Math.floor(Math.random() * (790 - 10) + 1);
@@ -129,7 +129,7 @@ class Ball {
     this.y += this.ySpeed;
   }
   _draw() {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 }
 
